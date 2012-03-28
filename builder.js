@@ -26,7 +26,7 @@ $( function( $ ) {
 			return group.replace( / /g, '-' ).replace( /^(.)/, function( c ) { return c.toLowerCase(); } );
 		},
 		strip = function( file ) {
-			return file.replace( /\.\//g, '' ).replace( /\./g, '-' );
+			return file.replace( /^\.\//g, '' ).replace( /\./g, '-' );
 		},
 		buildForm = function( data ) {
 			var $form = $( "#builder" ),
@@ -59,31 +59,49 @@ $( function( $ ) {
 			});
 			$form.append( '<input type="submit">' )
 		},
-		checkDependencies = function( e ) {
+		buildCheckListFor = function( id, hash ) {
+			var module = dependencyMap[ id ];
+			hash = hash || {};
+			if ( module && module.deps ) {
+				_.each( module.deps, function( name, index ) {
+					if ( !( name in hash) ) {
+						hash[ name ] = true;
+						buildCheckListFor( name, hash );						
+					}
+				});
+			}
+			return _.keys( hash );
+		},
+		buildUncheckListFor = function( id, hash ) {
+			hash = hash || {};
+			_.each( dependencyMap, function( module, name ) {
+				if ( !( name in hash ) ) {
+					if ( _.indexOf( module.deps, id ) > -1 ) {
+						hash[ name ] = true;
+						buildUncheckListFor( name, hash );
+					}
+				}
+			});
+			return _.keys( hash );
+		},
+		resolveDependencies = function( e ) {
 			var $el = $( e.target ),
 				key, i,
 				id = $el.attr( 'id' ).replace( /\-/g, '.' ),
-				dep = dependencyMap[ id ];
+				dep = dependencyMap[ id ],
+				checked = $el.is( ':checked' ),
+				list;
 
-			if ( $el.is( ':checked' ) ) {
-				if ( dep.deps ) {
-					_.each( dep.deps, function( module, index ) {
-						$( '#' + module2domId( module ) ).attr( 'checked', 'checked' );
-					});
-				}
+			if ( checked ) {
+				list = buildCheckListFor( id );
+				_.each( list, function( name ) {
+					$( '#' + module2domId( name ) ).attr( 'checked', 'checked' );
+				});
 			} else {
-				for ( key in dependencyMap ) {
-					if ( dependencyMap.hasOwnProperty( key ) && dependencyMap[key].deps ) {
-						for ( i = 0; i < dependencyMap[key].deps.length; i++ ) {
-
-							if ( module2domId( dependencyMap[key].deps[i] ) == module2domId( id ) ) {
-								var checkDep = module2domId( key );
-
-								$( '#' + checkDep ).removeAttr( 'checked' );
-							}
-						}
-					}
-				}
+				list = buildUncheckListFor( id );
+				_.each( list, function( name ) {
+					$( '#' + module2domId( name ) ).removeAttr( 'checked' );
+				});
 			}
 		};
 
@@ -92,7 +110,9 @@ $( function( $ ) {
 			dependencyMap = data;
 			// Clean up deps attr from relative paths and plugins
 			_.each( dependencyMap, function( value, key, map ) {
-				if ( value.deps ) {
+				if ( value.group && value.group === "exclude" ) {
+					delete map[ key ];
+				} else if ( value.deps ) {
 					_.each( value.deps, function( v, k, m ) {
 						m[ k ] = m[ k ].replace( /^.*!/, "" );  // remove the plugin part
 						m[ k ] = m[ k ].replace( /\[.*$/, "" ); // remove the plugin arguments at the end of the path
@@ -104,7 +124,7 @@ $( function( $ ) {
 		}
 	);
 
-	$( document ).delegate( 'input:checkbox', 'change', checkDependencies );
+	$( document ).delegate( 'input:checkbox', 'change', resolveDependencies );
 
 	$( "#builder" ).bind( 'submit',
 		function( e ) {
