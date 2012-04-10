@@ -43,7 +43,7 @@ $( function( $ ) {
 							desc = data[ name ].description,
 							labelm = "<label for='" + id + "'>" + label + "</label>",
 							inputm = "<input type='checkbox' id='" + id + "' name='" + id + "'/>",
-							descm = "<small>" + desc + "</small>",
+							descm = "<p class='desc'>" + desc + "</p>",
 							item = inputm;
 
 						if ( /^jquery\.mobile/.test( name ) ) {
@@ -53,11 +53,11 @@ $( function( $ ) {
 							$group.append( "<li>" + item + "</li>" );
 						}
 					});
-					$form.append( "<h3>" + group + "</h3>" );
+					$form.append( "<h3 class='hed-cat'>" + group + "</h3>" );
 					$form.append( $group );
 				}
 			});
-			$form.append( '<input type="submit">' )
+			$form.append( '<input type="submit">' ).removeClass( "loading" );
 		},
 		buildCheckListFor = function( id, hash ) {
 			var module = dependencyMap[ id ];

@@ -1,28 +1,30 @@
-#builder {
-	min-height: 10em;
+.loading {
+	background: url(http://wil.to/_/ajax.gif) center center no-repeat;
+	margin: 20px 0 0 0;
+}
+.builder {
+	min-height: 8em;
 	list-style: none;
 }
-#builder li {
+.builder li {
 	display: block;
-	padding: 2px 0 5px 0;
 }
-#builder label { 
+.builder label { 
 	display: inline-block;
 	padding: 0 0 0 5px;
 }
-#builder small { 
-	display: block;
-	color: #777;
-	font-size: .9em;
-}
-#builder h3 {
+.hed-cat {
 	font-size: 2em;
 	margin: 0 20px;
 	padding: 15px 0 5px 0;
 	border-bottom: 3px solid #ddd;
 	text-transform: capitalize;
 }
-
+#page .desc { 
+	display: block;
+	color: #777;
+	font-size: .9em;
+}
 textarea {
 	width: 100%;
 	height: 200px;
