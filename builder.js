@@ -37,6 +37,7 @@ $( function( $ ) {
 			_.forEach( groupedComponents, function( o, group ) {
 				if ( group != "exclude" ) {
 					var $group = $( "<ul>" ).attr( "id", group2domId( group ) ),
+						catlength = 0,
 						cat;
 
 					_.forEach( groupedComponents[ group ], function( component, name ) {
@@ -54,14 +55,17 @@ $( function( $ ) {
 							if ( desc ) { item = item + descm; }
 
 							$group.append( "<li>" + item + "</li>" );
+							catlength++;
 						}
 					});
 
-					cat = $("<div class='group'></div>")
-						.append( "<label class='select-all'> Select all <input type='checkbox' class='sel-all' name='select-all-" + group + "' /></label> <h3 class='hed-cat'>" + group + "</h3>" )
-						.append( $group );
+					if( catlength ) {
+						cat = $("<div class='group'></div>")
+							.append( "<label class='select-all'> Select all <input type='checkbox' class='sel-all' name='select-all-" + group + "' /></label> <h3 class='hed-cat'>" + group + "</h3>" )
+							.append( $group );
 
-					$form.append( cat );
+						$form.append( cat );
+					}
 				}
 			});
 			$form.append( '<input type="submit" value="Build My Download" class="buildBtn">' ).removeClass( "loading" );
@@ -110,13 +114,12 @@ $( function( $ ) {
 					$( '#' + module2domId( name ) ).removeAttr( 'checked' );
 				});
 			}
-			$el.closest( ".group" ).find( ".sel-all" ).prop( "checked", false );
 		},
 		selectAll = function( e ) {
 			var $el = $( e.target ),
 				elval = $el.prop( "checked" );
 
-			$el.closest( ".group" ).find( "input:checkbox" ).prop( "checked", elval );
+			$el.closest( ".group" ).find( "ul input:checkbox" ).prop( "checked", elval ).trigger( "change" );
 		};
 
 	$.ajax( baseUrl+'/v1/dependencies/jquery/jquery-mobile/master/?baseUrl=js' ).done(
@@ -138,8 +141,12 @@ $( function( $ ) {
 		}
 	);
 
-	$( document ).delegate( '.inc', 'change', resolveDependencies );
-	$( document ).delegate( '.sel-all', 'change', selectAll );
+	$( document )
+		.delegate( '.inc', 'change', resolveDependencies )
+		.delegate( '.inc', 'click', function( e ) {
+			$( e.target ).closest( ".group" ).find( ".sel-all" ).prop( "checked", false )
+		})
+		.delegate( '.sel-all', 'change', selectAll );
 
 	$( "#builder" ).bind( 'submit',
 		function( e ) {
