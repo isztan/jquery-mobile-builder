@@ -36,14 +36,16 @@ $( function( $ ) {
 
 			_.forEach( groupedComponents, function( o, group ) {
 				if ( group != "exclude" ) {
-					var $group = $( "<ul>" ).attr( "id", group2domId( group ) );
+					var $group = $( "<ul>" ).attr( "id", group2domId( group ) ),
+						cat;
+
 					_.forEach( groupedComponents[ group ], function( component, name ) {
 						var id = module2domId( name ),
 							label = data[ name ].label,
 							desc = data[ name ].description,
 							req = data[ name ].required,
 							labelm = "<label for='" + id + "'>" + label + "</label>",
-							inputm = "<input type='checkbox' id='" + id + "' name='" + id + "'" + ( req ? " checked='checked' disabled='true'" : "") + "/>",
+							inputm = "<input type='checkbox' class='inc' id='" + id + "' name='" + id + "'" + ( req ? " checked='checked' disabled='true'" : "") + "/>",
 							descm = "<p class='desc'>" + desc + "</p>",
 							item = inputm;
 
@@ -54,8 +56,12 @@ $( function( $ ) {
 							$group.append( "<li>" + item + "</li>" );
 						}
 					});
-					$form.append( "<h3 class='hed-cat'>" + group + "</h3>" );
-					$form.append( $group );
+
+					cat = $("<div class='group'></div>")
+						.append( "<label class='select-all'> Select all <input type='checkbox' class='sel-all' name='select-all-" + group + "' /></label> <h3 class='hed-cat'>" + group + "</h3>" )
+						.append( $group );
+
+					$form.append( cat );
 				}
 			});
 			$form.append( '<input type="submit" value="Build My Download" class="buildBtn">' ).removeClass( "loading" );
@@ -67,7 +73,7 @@ $( function( $ ) {
 				_.each( module.deps, function( name, index ) {
 					if ( !( name in hash) ) {
 						hash[ name ] = true;
-						buildCheckListFor( name, hash );						
+						buildCheckListFor( name, hash );
 					}
 				});
 			}
@@ -104,6 +110,13 @@ $( function( $ ) {
 					$( '#' + module2domId( name ) ).removeAttr( 'checked' );
 				});
 			}
+			$el.closest( ".group" ).find( ".sel-all" ).prop( "checked", false );
+		},
+		selectAll = function( e ) {
+			var $el = $( e.target ),
+				elval = $el.prop( "checked" );
+
+			$el.closest( ".group" ).find( "input:checkbox" ).prop( "checked", elval );
 		};
 
 	$.ajax( baseUrl+'/v1/dependencies/jquery/jquery-mobile/master/?baseUrl=js' ).done(
@@ -125,7 +138,8 @@ $( function( $ ) {
 		}
 	);
 
-	$( document ).delegate( 'input:checkbox', 'change', resolveDependencies );
+	$( document ).delegate( '.inc', 'change', resolveDependencies );
+	$( document ).delegate( '.sel-all', 'change', selectAll );
 
 	$( "#builder" ).bind( 'submit',
 		function( e ) {

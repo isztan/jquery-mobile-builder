@@ -44,3 +44,9 @@ input[type="submit"].buildBtn {
 	margin:1em;
 	padding:6px;
 }
+.select-all {
+	display: block;
+	float: right;
+	font-size: 1.2em;
+	margin: 20px 20px 0 0;
+}
