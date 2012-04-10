@@ -1,8 +1,9 @@
 .loading {
-	background: url(http://wil.to/_/ajax.gif) center center no-repeat;
+	background: url(img/ajax.gif) center center no-repeat;
 	margin: 20px 0 0 0;
 }
 .builder {
+	padding-top: 1.25em;
 	min-height: 8em;
 	list-style: none;
 }
