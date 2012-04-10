@@ -60,7 +60,7 @@ $( function( $ ) {
 					$form.append( $group );
 				}
 			});
-			$form.append( '<input type="submit">' ).removeClass( "loading" );
+			$form.append( '<input type="submit" value="Build My Download" class="buildBtn">' ).removeClass( "loading" );
 		},
 		buildCheckListFor = function( id, hash ) {
 			var module = dependencyMap[ id ];

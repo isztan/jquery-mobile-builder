@@ -2,8 +2,17 @@
 	background: url(img/ajax.gif) center center no-repeat;
 	margin: 20px 0 0 0;
 }
+#page p.intro {
+	font-size:1.7em;
+	color:#777;
+	padding: 2.1em 2em 1.4em 2.2em;
+}
+.sub #page ul li {
+line-height: 1.5em;
+margin: 0 0 4px -10px;
+}
 .builder {
-	padding-top: 1.25em;
+	padding: 0 2em;
 	min-height: 8em;
 	list-style: none;
 }
@@ -12,7 +21,7 @@
 }
 .builder label { 
 	display: inline-block;
-	padding: 0 0 0 5px;
+	padding: 0 0 0 6px;
 }
 .hed-cat {
 	font-size: 2em;
@@ -29,4 +38,9 @@
 textarea {
 	width: 100%;
 	height: 200px;
+}
+input[type="submit"].buildBtn {
+	font-size:2em;
+	margin:1em;
+	padding:6px;
 }
