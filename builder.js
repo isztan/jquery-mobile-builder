@@ -46,8 +46,6 @@ $( function( $ ) {
 							inputm = "<input type='checkbox' id='" + id + "' name='" + id + "'" + ( req ? " checked='checked' disabled='true'" : "") + "/>",
 							descm = "<p class='desc'>" + desc + "</p>",
 							item = inputm;
-							
-							console.log( req );
 
 						if ( /^jquery\.mobile/.test( name ) ) {
 							if ( label ) { item = item + labelm; }
