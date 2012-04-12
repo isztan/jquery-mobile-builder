@@ -1,5 +1,5 @@
 $( function( $ ) {
-	var baseUrl = "http://amd-builder.no.de",
+	var host = "http://amd-builder.no.de",
 		dependencyMap,
 		builderhtml = [],
 		sortable = [],
@@ -122,7 +122,7 @@ $( function( $ ) {
 			$el.closest( ".group" ).find( "ul input:checkbox" ).prop( "checked", elval ).trigger( "change" );
 		};
 
-	$.ajax( baseUrl+'/v1/dependencies/jquery/jquery-mobile/master/?baseUrl=js' ).done(
+	$.ajax( host + '/v1/dependencies/jquery/jquery-mobile/master/?baseUrl=js' ).done(
 		function( data ) {
 			dependencyMap = data;
 			// Clean up deps attr from relative paths and plugins
@@ -152,22 +152,20 @@ $( function( $ ) {
 		function( e ) {
 			var $el = $( this ),
 				formData = $el.find( ':checked' ),
-				items = '';
+				config;
 
-			formData.each( function() {
-				items = items + $( this ).attr( 'id' ) + '&';
-			});
-
-			$.ajax( {
-				url: baseUrl+'/v1/bundle/jquery/jquery-mobile/master/jquery.mobile.custom.js?baseUrl=js&include=' + items.replace( /\-/g, '.' ) + '&pragmasOnSave=%7B%22jqmBuildExclude%22%3Atrue%7D',
-				success: function( data ) {
-					if ( $( '.builder-output' ).length ) {
-						$( '.builder-output' ).text( data );
-					} else {
-						$el.after( "<textarea class='builder-output'>" + data + "</textarea>" );
-					}
-				}
-			});
 			e.preventDefault();
+			e.stopImmediatePropagation();
+
+			config = {
+				baseUrl: "js",
+				include: formData.map( function() { return $( this ).attr( 'id' ).replace( /\-/g, '.' ); } ).toArray().join( "," ),
+				// The excludes need to be kept in sync with the ones in jQM's Makefile
+				exclude: [ "jquery,../external/requirejs/order", "../external/requirejs/depend", "../external/requirejs/text", "../external/requirejs/text!../version.txt" ].join( "," ),
+				pragmasOnSave: '{ "jqmBuildExclude": true }',
+				filter: "../build/filter"
+			};
+
+			location.href = host + '/v1/bundle/jquery/jquery-mobile/master/jquery.mobile.custom.zip?' + $.param( config );
 		});
 });
