@@ -29,7 +29,7 @@ $( function( $ ) {
 			return file.replace( /^\.\//g, '' ).replace( /\./g, '-' );
 		},
 		buildForm = function( data ) {
-			var $form = $( "#builder" ),
+			var $form = $( "#builder" ).empty(),
 				groupedComponents = groupBy( data, function( o ) {
 					return ( o.group || "Other" );
 				}),
@@ -122,38 +122,45 @@ $( function( $ ) {
 				elval = $el.prop( "checked" );
 
 			$el.closest( ".group" ).find( "ul input:checkbox" ).prop( "checked", elval ).trigger( "change" );
+		},
+		refreshForm = function() {
+			var branch = $( "#branch option:selected" ).val() || "master";
+			$.ajax( host + '/v1/dependencies/jquery/jquery-mobile/' + branch + '/?baseUrl=js' ).done(
+				function( data ) {
+					dependencyMap = data;
+					// Clean up deps attr from relative paths and plugins
+					_.each( dependencyMap, function( value, key, map ) {
+						if ( value.group && value.group === "exclude" ) {
+							delete map[ key ];
+						} else if ( value.deps ) {
+							_.each( value.deps, function( v, k, m ) {
+								m[ k ] = m[ k ].replace( /^.*!/, "" );  // remove the plugin part
+								m[ k ] = m[ k ].replace( /\[.*$/, "" ); // remove the plugin arguments at the end of the path
+								m[ k ] = m[ k ].replace( /^\.\//, "" ); // remove the relative path "./"
+							});
+						}
+					});
+					buildForm( dependencyMap );
+				}
+			);
 		};
 
-	$.ajax( host + '/v1/dependencies/jquery/jquery-mobile/master/?baseUrl=js' ).done(
-		function( data ) {
-			dependencyMap = data;
-			// Clean up deps attr from relative paths and plugins
-			_.each( dependencyMap, function( value, key, map ) {
-				if ( value.group && value.group === "exclude" ) {
-					delete map[ key ];
-				} else if ( value.deps ) {
-					_.each( value.deps, function( v, k, m ) {
-						m[ k ] = m[ k ].replace( /^.*!/, "" );  // remove the plugin part
-						m[ k ] = m[ k ].replace( /\[.*$/, "" ); // remove the plugin arguments at the end of the path
-						m[ k ] = m[ k ].replace( /^\.\//, "" ); // remove the relative path "./"
-					});
-				}
-			});
-			buildForm( dependencyMap );
-		}
-	);
+	refreshForm();
 
 	$( document )
 		.delegate( '.inc', 'change', resolveDependencies )
 		.delegate( '.inc', 'click', function( e ) {
 			$( e.target ).closest( ".group" ).find( ".sel-all" ).prop( "checked", false )
 		})
-		.delegate( '.sel-all', 'change', selectAll );
+		.delegate( '.sel-all', 'change', selectAll )
+	
+	$( '#branch' ).change( refreshForm );
 
 	$( "#builder" ).bind( 'submit',
 		function( e ) {
 			var $el = $( this ),
 				formData = $el.find( ':checked' ),
+				branch = $( "#branch option:selected" ).val() || "master",
 				config;
 
 			e.preventDefault();
@@ -169,6 +176,6 @@ $( function( $ ) {
 				filter: "../build/filter"
 			};
 
-			location.href = host + '/v1/bundle/jquery/jquery-mobile/master/jquery.mobile.custom.zip?' + $.param( config );
+			location.href = host + '/v1/bundle/jquery/jquery-mobile/' + branch + '/jquery.mobile.custom.zip?' + $.param( config );
 		});
 });
