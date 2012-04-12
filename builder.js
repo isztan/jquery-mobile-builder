@@ -163,6 +163,7 @@ $( function( $ ) {
 				// The excludes need to be kept in sync with the ones in jQM's Makefile
 				exclude: [ "jquery,../external/requirejs/order", "../external/requirejs/depend", "../external/requirejs/text", "../external/requirejs/text!../version.txt" ].join( "," ),
 				pragmasOnSave: '{ "jqmBuildExclude": true }',
+				preserveLicenseComments: false,
 				filter: "../build/filter"
 			};
 
