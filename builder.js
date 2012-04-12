@@ -14,7 +14,7 @@ $( function( $ ) {
 				if ( value.group ) {
 					res[ value.group ][ key ] = value;
 				} else {
-					res.other[ key ] = value;
+					res.Other[ key ] = value;
 				}
 			});
 			return res;
@@ -31,16 +31,18 @@ $( function( $ ) {
 		buildForm = function( data ) {
 			var $form = $( "#builder" ),
 				groupedComponents = groupBy( data, function( o ) {
-					return ( o.group || "other" );
-				});
+					return ( o.group || "Other" );
+				}),
+				groups = _.keys( groupedComponents ).sort();
 
-			_.forEach( groupedComponents, function( o, group ) {
+			_.forEach( groups, function( group ) {
 				if ( group != "exclude" ) {
 					var $group = $( "<ul>" ).attr( "id", group2domId( group ) ),
 						catlength = 0,
-						cat;
+						cat,
+						components = _.keys( groupedComponents[ group ] ).sort();
 
-					_.forEach( groupedComponents[ group ], function( component, name ) {
+					_.forEach( components, function( name ) {
 						var id = module2domId( name ),
 							label = data[ name ].label,
 							desc = data[ name ].description,
