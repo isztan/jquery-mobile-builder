@@ -173,6 +173,7 @@ $( function( $ ) {
 				exclude: [ "jquery,../external/requirejs/order", "../external/requirejs/depend", "../external/requirejs/text", "../external/requirejs/text!../version.txt" ].join( "," ),
 				pragmasOnSave: '{ "jqmBuildExclude": true }',
 				preserveLicenseComments: false,
+				skipModuleInsertion: true,
 				filter: "../build/filter"
 			};
 
