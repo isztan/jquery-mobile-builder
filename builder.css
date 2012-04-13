@@ -23,6 +23,9 @@ margin: 0 0 4px -10px;
 	display: inline-block;
 	padding: 0 0 0 6px;
 }
+.group {
+	clear: both;
+}
 .hed-cat {
 	font-size: 2em;
 	margin: 0 20px;
@@ -49,4 +52,48 @@ input[type="submit"].buildBtn {
 	float: right;
 	font-size: 1.2em;
 	margin: 20px 20px 0 0;
+}
+.branches {
+	float: left;
+	font-size: 1.4em;
+	font-weight: bold;
+	margin: 10px 40px;
+}
+.branches select {
+	margin: 10px 0 0 0;
+	clear: both;
+	float: left;
+}
+
+#page {
+	overflow: hidden;
+	position: relative;
+}
+.version {
+	background: #f7cf57;
+	border: solid #fff;
+	border-width: 2px 0;
+	color: #000 !important;
+	display: block;
+	font-weight: bold;
+	position: absolute;
+	padding: .25em 3em;
+	right: -2.5em;
+	text-align: center;
+	text-shadow: 0 1px 0 #fff;
+	top: 1.75em;
+	width: auto !important;
+	z-index: 9;
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	transform: rotate(45deg);
+
+	-webkit-box-shadow: 0 0 6px rgba(0,0,0,.75);
+	-moz-box-shadow: 0 0 6px rgba(0,0,0,.75);
+	-o-box-shadow: 0 0 6px rgba(0,0,0,.75);
+	box-shadow: 0 0 6px rgba(0,0,0,.75);
+}
+.version b {
+	color: #a21412;
 }
