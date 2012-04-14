@@ -161,8 +161,10 @@ $( function( $ ) {
 			var $el = $( this ),
 				formData = $el.find( ':checked' ),
 				branch = $( "#branch option:selected" ).val() || "master",
+				$button = $( e.target ).find( "input[type=submit]" ),
 				config;
 
+			$button.attr( "disabled", true );
 			e.preventDefault();
 			e.stopImmediatePropagation();
 
@@ -177,6 +179,14 @@ $( function( $ ) {
 				filter: "../build/filter"
 			};
 
-			location.href = host + '/v1/bundle/jquery/jquery-mobile/' + branch + '/jquery.mobile.custom.zip?' + $.param( config );
+			$( "#download" ).html(
+				$( "<iframe>" )
+					.attr( "src", host + '/v1/bundle/jquery/jquery-mobile/' + branch + '/jquery.mobile.custom.zip?' + $.param( config ) )
+			)
+
+			// I could not leverage iframe.onload to re-enable the button :-/
+			setTimeout( function() {
+				$button.attr( "disabled", false );
+			}, 1000 );
 		});
 });

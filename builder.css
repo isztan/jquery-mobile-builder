@@ -97,3 +97,7 @@ input[type="submit"].buildBtn {
 .version b {
 	color: #a21412;
 }
+
+#download {
+	display: none;
+}
