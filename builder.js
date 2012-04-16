@@ -30,7 +30,7 @@ $( function( $ ) {
 		},
 		buildForm = function( data ) {
 			var $form = $( "#builder" ).empty(),
-				groupedComponents = groupBy( data, function( o ) {
+				groupedComponents = groupBy( data, function( o, key ) {
 					return ( o.group || "Other" );
 				}),
 				groups = _.keys( groupedComponents ).sort();
@@ -125,7 +125,7 @@ $( function( $ ) {
 		},
 		refreshForm = function() {
 			var branch = $( "#branch option:selected" ).val() || "master";
-			$.ajax( host + '/v1/dependencies/jquery/jquery-mobile/' + branch + '/?baseUrl=js' ).done(
+			$.getJSON( host + '/v1/dependencies/jquery/jquery-mobile/' + branch + '/?baseUrl=js' ).done(
 				function( data ) {
 					dependencyMap = data;
 					// Clean up deps attr from relative paths and plugins
