@@ -22,6 +22,9 @@ $( function( $ ) {
 		module2domId = function( module ) {
 			return module.replace( /\./g, '-' ).replace( /^(.)/, function( c ) { return c.toLowerCase(); } );
 		},
+		domId2module = function( domId ) {
+			return domId.replace( /\-/g, '.' );
+		},
 		group2domId = function( group ) {
 			return group.replace( / /g, '-' ).replace( /^(.)/, function( c ) { return c.toLowerCase(); } );
 		},
@@ -70,6 +73,21 @@ $( function( $ ) {
 					}
 				}
 			});
+			
+			// trace dependencies for required modules and disable their dependencies
+			$form.find( "input:checkbox:disabled:checked" ).each( 
+				function() {
+					_.each( buildCheckListFor( domId2module( $( this ).attr( "id" ) ) ), 
+						function( module ) {
+							$( "#"+module2domId(module) )
+								.prop( "checked", true )
+								.trigger( "change" )
+								.attr( "disabled", true );
+						}
+					);
+				}
+			);
+
 			$form.append( '<input type="submit" value="Build My Download" class="buildBtn">' ).removeClass( "loading" );
 		},
 		buildCheckListFor = function( id, hash ) {
@@ -121,7 +139,7 @@ $( function( $ ) {
 			var $el = $( e.target ),
 				elval = $el.prop( "checked" );
 
-			$el.closest( ".group" ).find( "ul input:checkbox" ).prop( "checked", elval ).trigger( "change" );
+			$el.closest( ".group" ).find( "ul input:checkbox" ).not( ":disabled" ).prop( "checked", elval ).trigger( "change" );
 		},
 		refreshForm = function() {
 			var branch = $( "#branch option:selected" ).val() || "master";
