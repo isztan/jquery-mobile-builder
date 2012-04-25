@@ -1,5 +1,5 @@
 $( function( $ ) {
-	var host = "http://amd-builder.no.de",
+	var host = "/amd-builder",
 		dependencyMap,
 		builderhtml = [],
 		sortable = [],
