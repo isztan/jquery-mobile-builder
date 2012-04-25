@@ -177,7 +177,7 @@ $( function( $ ) {
 	$( "#builder" ).bind( 'submit',
 		function( e ) {
 			var $el = $( this ),
-				formData = $el.find( ':checked' ),
+				formData = $el.find( ':checkbox[id]:checked' ),
 				branch = $( "#branch option:selected" ).val() || "master",
 				$button = $( e.target ).find( "input[type=submit]" ),
 				config;
