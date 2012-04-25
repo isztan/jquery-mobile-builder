@@ -191,6 +191,10 @@ $( function( $ ) {
 				include: formData.map( function() { return $( this ).attr( 'id' ).replace( /\-/g, '.' ); } ).toArray().join( "," ),
 				// The excludes need to be kept in sync with the ones in jQM's Makefile
 				exclude: [ "jquery,../external/requirejs/order", "../external/requirejs/depend", "../external/requirejs/text", "../external/requirejs/text!../version.txt" ].join( "," ),
+				wrap: JSON.stringify({ 
+					startFile: "../build/wrap.start",
+					endFile: "../build/wrap.end"
+				}),
 				pragmasOnSave: '{ "jqmBuildExclude": true }',
 				preserveLicenseComments: false,
 				skipModuleInsertion: true,
