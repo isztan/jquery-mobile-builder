@@ -20,10 +20,13 @@ $( function( $ ) {
 			return res;
 		},
 		module2domId = function( module ) {
-			return module.replace( /\./g, '-' ).replace( /^(.)/, function( c ) { return c.toLowerCase(); } );
+			return module.replace( /\./g, '-' )
+				.replace( /^(.)/, function( c ) { return c.toLowerCase(); } )
+				.replace( /\//g, '-slash-' );
 		},
 		domId2module = function( domId ) {
-			return domId.replace( /\-/g, '.' );
+			return domId.replace( /-slash-/, '/' )
+				.replace( /\-/g, '.' );
 		},
 		group2domId = function( group ) {
 			return group.replace( / /g, '-' ).replace( /^(.)/, function( c ) { return c.toLowerCase(); } );
@@ -55,8 +58,8 @@ $( function( $ ) {
 							descm = "<p class='desc'>" + desc + "</p>",
 							item = inputm;
 
-						if ( /^jquery\.mobile/.test( name ) ) {
-							if ( label ) { item = item + labelm; }
+						if ( label ) {
+							item = item + labelm;
 							if ( desc ) { item = item + descm; }
 
 							$group.append( "<li>" + item + "</li>" );
@@ -118,7 +121,7 @@ $( function( $ ) {
 		resolveDependencies = function( e ) {
 			var $el = $( e.target ),
 				key, i,
-				id = $el.attr( 'id' ).replace( /\-/g, '.' ),
+				id = domId2module( $el.attr( 'id' ) ),
 				dep = dependencyMap[ id ],
 				checked = $el.is( ':checked' ),
 				list;
