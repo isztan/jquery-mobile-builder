@@ -183,17 +183,22 @@ $( function( $ ) {
 				formData = $el.find( ':checkbox[id]:checked' ),
 				branch = $( "#branch option:selected" ).val() || "master",
 				$button = $( e.target ).find( "input[type=submit]" ),
+				exclude = [ "jquery", "text", "text!../version.txt" ],
 				config;
 
 			$button.attr( "disabled", true );
 			e.preventDefault();
 			e.stopImmediatePropagation();
 
+			if ( branch.indexOf( "1.1" ) === 0 ) {
+				exclude = [ "jquery","../external/requirejs/order", "../external/requirejs/depend", "../external/requirejs/text", "../external/requirejs/text!../version.txt" ];
+			}
+
 			config = {
 				baseUrl: "js",
 				include: formData.map( function() { return domId2module( $( this ).attr( 'id' ) ); } ).toArray().join( "," ),
 				// The excludes need to be kept in sync with the ones in jQM's Makefile
-				exclude: [ "jquery,../external/requirejs/order", "../external/requirejs/depend", "../external/requirejs/text", "../external/requirejs/text!../version.txt" ].join( "," ),
+				exclude: exclude.join( "," ),
 				wrap: JSON.stringify({ 
 					startFile: "../build/wrap.start",
 					endFile: "../build/wrap.end"
