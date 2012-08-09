@@ -183,7 +183,7 @@ $( function( $ ) {
 				formData = $el.find( ':checkbox[id]:checked' ),
 				branch = $( "#branch option:selected" ).val() || "master",
 				$button = $( e.target ).find( "input[type=submit]" ),
-				exclude = [ "jquery", "text", "text!../version.txt" ],
+				exclude = [ "jquery", "text", "depend", "text!../version.txt" ],
 				config;
 
 			$button.attr( "disabled", true );
