@@ -164,9 +164,20 @@ $( function( $ ) {
 					buildForm( dependencyMap );
 				}
 			);
+		},
+		refreshImageBundleLink = function() {
+			var branch = $( "#branch option:selected" ).val(),
+				url = "http://code.jquery.com/mobile/" + branch + "/jquery.mobile.images-" + branch + ".zip";
+			
+			if ( branch === "master" ) {
+				url = "https://github.com/jquery/jquery-mobile/tree/master/css/themes/default/images";
+			}
+
+			$( "a#imageBundleLink" ).attr( "href", url );
 		};
 
 	refreshForm();
+	refreshImageBundleLink();
 
 	$( document )
 		.delegate( '.inc', 'change', resolveDependencies )
@@ -176,6 +187,7 @@ $( function( $ ) {
 		.delegate( '.sel-all', 'change', selectAll );
 	
 	$( '#branch' ).change( refreshForm );
+	$( '#branch' ).change( refreshImageBundleLink );
 
 	$( "#builder" ).bind( 'submit',
 		function( e ) {
