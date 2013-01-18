@@ -42,7 +42,7 @@ $( function( $ ) {
 				groups = _.keys( groupedComponents ).sort();
 
 			_.forEach( groups, function( group ) {
-				if ( group != "exclude" ) {
+				if ( group !== "exclude" ) {
 					var $group = $( "<ul>" ).attr( "id", group2domId( group ) ),
 						catlength = 0,
 						cat,
@@ -171,9 +171,9 @@ $( function( $ ) {
 	$( document )
 		.delegate( '.inc', 'change', resolveDependencies )
 		.delegate( '.inc', 'click', function( e ) {
-			$( e.target ).closest( ".group" ).find( ".sel-all" ).prop( "checked", false )
+			$( e.target ).closest( ".group" ).find( ".sel-all" ).prop( "checked", false );
 		})
-		.delegate( '.sel-all', 'change', selectAll )
+		.delegate( '.sel-all', 'change', selectAll );
 	
 	$( '#branch' ).change( refreshForm );
 
@@ -199,7 +199,7 @@ $( function( $ ) {
 				include: formData.map( function() { return domId2module( $( this ).attr( 'id' ) ); } ).toArray().join( "," ),
 				// The excludes need to be kept in sync with the ones in jQM's Makefile
 				exclude: exclude.join( "," ),
-				wrap: JSON.stringify({ 
+				wrap: JSON.stringify({
 					startFile: "../build/wrap.start",
 					endFile: "../build/wrap.end"
 				}),
@@ -212,7 +212,7 @@ $( function( $ ) {
 			$( "#download" ).html(
 				$( "<iframe>" )
 					.attr( "src", host + '/v1/bundle/jquery/jquery-mobile/' + branch + '/jquery.mobile.custom.zip?' + $.param( config ) )
-			)
+			);
 
 			// I could not leverage iframe.onload to re-enable the button :-/
 			setTimeout( function() {
