@@ -193,7 +193,7 @@ $( function( $ ) {
 		function( e ) {
 			var $el = $( this ),
 				formData = $el.find( ':checkbox[id]:checked' ),
-				branch = $( "#branch option:selected" ).val() || "master",
+				ref = $( "#branch option:selected" ).val() || "master",
 				$button = $( e.target ).find( "input[type=submit]" ),
 				exclude = [ "jquery", "text", "depend", "text!../version.txt" ],
 				config;
@@ -202,8 +202,11 @@ $( function( $ ) {
 			e.preventDefault();
 			e.stopImmediatePropagation();
 
-			if ( branch.indexOf( "1.1" ) === 0 ) {
+			if ( ref.indexOf( "1.1" ) === 0 ) {
 				exclude = [ "jquery","../external/requirejs/order", "../external/requirejs/depend", "../external/requirejs/text", "../external/requirejs/text!../version.txt" ];
+			} else if ( ref === "master" || parseInt( ref.replace( /\./, "" ), 10 ) > 130 ) {
+				// Starting at 1.3.1 we use requirejs.config.js to define path to plugins
+				exclude = [ "jquery", "json", "depend", "json!../package.json" ];
 			}
 
 			config = {
@@ -212,8 +215,8 @@ $( function( $ ) {
 				// The excludes need to be kept in sync with the ones in jQM's Makefile
 				exclude: exclude.join( "," ),
 				wrap: JSON.stringify({
-					startFile: "../build/wrap.start",
-					endFile: "../build/wrap.end"
+					startFile: "build/wrap.start",
+					endFile: "build/wrap.end"
 				}),
 				pragmasOnSave: '{ "jqmBuildExclude": true }',
 				preserveLicenseComments: false,
@@ -221,9 +224,16 @@ $( function( $ ) {
 				filter: "../build/filter"
 			};
 
+			if ( ref === "master" || parseInt( ref.replace( /\./, "" ), 10 ) > 130 ) {
+				// Starting at 1.3.1 we use requirejs.config.js 
+				$.extend( config, {
+					mainConfigFile: "js/requirejs.config.js"
+				});
+			}
+
 			$( "#download" ).html(
 				$( "<iframe>" )
-					.attr( "src", host + '/v1/bundle/jquery/jquery-mobile/' + branch + '/jquery.mobile.custom.zip?' + $.param( config ) )
+					.attr( "src", host + '/v1/bundle/jquery/jquery-mobile/' + ref + '/jquery.mobile.custom.zip?' + $.param( config ) )
 			);
 
 			// I could not leverage iframe.onload to re-enable the button :-/
