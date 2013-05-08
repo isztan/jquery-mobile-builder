@@ -209,7 +209,7 @@ $( function( $ ) {
 				exclude = [ "jquery","../external/requirejs/order", "../external/requirejs/depend", "../external/requirejs/text", "../external/requirejs/text!../version.txt" ];
 			} else if ( isOlderThan130( ref ) ) {
 				// Starting at 1.3.1 we use requirejs.config.js to define path to plugins
-				exclude = [ "jquery", "json", "depend", "json!../package.json" ];
+				exclude = [ "jquery", "json", "json!../package.json" ];
 			}
 
 			config = {
