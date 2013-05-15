@@ -175,8 +175,8 @@ $( function( $ ) {
 
 			$( "a#imageBundleLink" ).attr( "href", url );
 		},
-		isOlderThan130 = function( ref ) {
-			return ( ref === "master" || parseInt( ref.replace( /\./g, "" ), 10 ) > 130 );
+		isOlderThan = function( ref, numVer ) {
+			return ( ref === "master" || parseInt( ref.replace( /\./g, "" ), 10 ) > numVer );
 		};
 
 	refreshForm();
@@ -205,11 +205,14 @@ $( function( $ ) {
 			e.preventDefault();
 			e.stopImmediatePropagation();
 
-			if ( ref.indexOf( "1.1" ) === 0 ) {
-				exclude = [ "jquery","../external/requirejs/order", "../external/requirejs/depend", "../external/requirejs/text", "../external/requirejs/text!../version.txt" ];
-			} else if ( isOlderThan130( ref ) ) {
-				// Starting at 1.3.1 we use requirejs.config.js to define path to plugins
+			if ( isOlderThan( ref, 131 ) ) {
+				// Starting at 1.3.2 we use requirejs.config.js to define path to plugins
 				exclude = [ "jquery", "json", "json!../package.json" ];
+			} else if ( isOlderThan( ref, 130 ) ) {
+				// in 1.3.1 we added the path to requirejs plugins to the path config
+				exclude = [ "jquery", "json", "depend", "json!../package.json" ];
+			} else if ( ref.indexOf( "1.1" ) === 0 ) {
+				exclude = [ "jquery","../external/requirejs/order", "../external/requirejs/depend", "../external/requirejs/text", "../external/requirejs/text!../version.txt" ];
 			}
 
 			config = {
@@ -227,7 +230,7 @@ $( function( $ ) {
 				filter: "../build/filter"
 			};
 
-			if ( isOlderThan130( ref ) ) {
+			if ( isOlderThan( ref, 130 ) ) {
 				// Starting at 1.3.1 we use requirejs.config.js 
 				$.extend( config, {
 					mainConfigFile: "js/requirejs.config.js"
